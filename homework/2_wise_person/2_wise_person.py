@@ -72,22 +72,28 @@ def calculateRates(pos, neg):
     return f"{TPR},{FPR},"
 
 def calculateEER(pos, neg):
-    mi = neg.sum() / pos.sum()
-    eps = 0.05
 
+    mi = neg.sum() / pos.sum()
+    eps = 0.01
+    minimum = 1e10
+    backupT = 0
     
-    # for T in range(100, 0, -1):
     for T in range(101):
         FP = neg[T:].sum()
         FN = pos[:T].sum()
 
         if (FP == 0) or (FN == 0):
             continue
-        
+
+        if minimum > abs(FP/FN - mi):
+            minimum = abs(FP/FN - mi)
+            backupT = T
+
+
         if abs(FP / FN - mi) <= eps:
             return f"{round(neg[T:].sum() / neg.sum(), 3)}"
 
-    return "ERROR"
+    return f"{round(neg[backupT:].sum() / neg.sum(), 3)}"
 
 def main():
 
