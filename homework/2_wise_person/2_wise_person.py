@@ -1,6 +1,7 @@
-from collections import deque
 import os
 import sys
+import numpy as np
+from collections import deque
 
 
 def readData(rootFolder):
@@ -21,7 +22,6 @@ def readData(rootFolder):
             index = name[name.find('a')+1:name.find('.')]
             data = open(os.path.join(root, name)).read() 
 
-            # print(index)
 
             if name[0:2].lower() == "ca":
                 data = data == "Yes"
@@ -47,37 +47,56 @@ def readData(rootFolder):
                     waitingWPA[index] = data
     return structuredData, f"{positives},{negatives},{len(structuredData)},"
 
+def dict2hist(dictData):
+    pos = np.zeros(101)
+    neg = np.zeros(101)
 
-def calculateRates(structuredData):
-    positives = 0
-    negatives = 0
+    for index in dictData:
+        solution, answer = dictData[index]
 
-    TPR = 0
-    FPR = 0
-
-    # Calculate TPR and FPR for T = 70%
-    for index in structuredData:
-        solution, answer = structuredData[index]
         if solution:
-            positives += 1
-            TPR += (answer >= 70)
+            pos[answer] += 1
         else:
-            negatives += 1
-            FPR += (answer >= 70)
+            neg[answer] += 1
     
-    TPR = round(TPR / positives, 3)
-    FPR = round(FPR / negatives, 3)
+    return pos, neg
+
+
+def calculateRates(pos, neg):
+
+    threshold = 70
+    
+    TPR = round(pos[threshold:].sum() / pos.sum(), 3)
+    FPR = round(neg[threshold:].sum() / neg.sum(), 3)
 
     return f"{TPR},{FPR},"
 
+def calculateEER(pos, neg):
+    mi = neg.sum() / pos.sum()
+    eps = 0.05
+
+    
+    # for T in range(100, 0, -1):
+    for T in range(101):
+        FP = neg[T:].sum()
+        FN = pos[:T].sum()
+
+        if (FP == 0) or (FN == 0):
+            continue
+        
+        if abs(FP / FN - mi) <= eps:
+            return f"{round(neg[T:].sum() / neg.sum(), 3)}"
+
+    return "ERROR"
 
 def main():
 
     rootFolder = input()
-    structuredData, firstHalf = readData(rootFolder)
-    secondHalf = calculateRates(structuredData)
-
-    print(firstHalf + secondHalf)
+    dictData, firstHalf = readData(rootFolder)
+    pos, neg = dict2hist(dictData) 
+    secondHalf = calculateRates(pos, neg)
+    EER = calculateEER(pos, neg)
+    print(firstHalf + secondHalf + EER)
 
 
 if __name__ == "__main__":

@@ -4,7 +4,9 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-calculateRates	homework/2_wise_person/2_wise_person.py	/^def calculateRates(structuredData):$/;"	f
+calculateEER	homework/2_wise_person/2_wise_person.py	/^def calculateEER(pos, neg):$/;"	f
+calculateRates	homework/2_wise_person/2_wise_person.py	/^def calculateRates(pos, neg):$/;"	f
+dict2hist	homework/2_wise_person/2_wise_person.py	/^def dict2hist(dictData):$/;"	f
 image	homework/1_getting_started/1_getting_started.py	/^    image = np.array(image_file)$/;"	v
 image_file	homework/1_getting_started/1_getting_started.py	/^    image_file = Image.open(image_path)$/;"	v
 image_path	homework/1_getting_started/1_getting_started.py	/^    image_path = input()$/;"	v
