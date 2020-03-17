@@ -20,7 +20,7 @@ def data_analisys():
         print(f"{i}. -> frames: {len(joint_json['frames'])}, maxJ: {mJ}, maxB: {mB}")
 
         if len(box_json["frames"]) != len(joint_json["frames"]):
-        print(f'{len(box_json["frames"])} != {len(joint_json["frames"])}')
+            print(f'{len(box_json["frames"])} != {len(joint_json["frames"])}')
         j = []
         b = []
         for frame in box_json["frames"]:

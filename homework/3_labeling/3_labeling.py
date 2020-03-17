@@ -1,6 +1,8 @@
 import numpy as np
 import json
-from pydantic import BaseModel
+
+def keysWithMaxVal(d):
+    return [key for key in d if d[key] == max(d.values())]
 
 def is_bounded(point, box, err=0):
     """ pass joint and box dict """
@@ -49,36 +51,51 @@ def calcPointDict(joint_list, box_list, indexes, err=0):
     for jFrame, bFrame in zip(joint_list, box_list):
         for joint in jFrame["joints"]:
             if not joint["identity"] in jointDict:
-                jointDict[joint["identity"]] = set()
-                interactions[joint["identity"]] = set()
+                jointDict[joint["identity"]] = dict()
                 for box in bFrame["bounding_boxes"]:
-                    interactions[joint["identity"]].add(box["identity"])
                     if is_bounded(joint["joint"], box["bounding_box"], err):
-                        jointDict[joint["identity"]].add(box["identity"])
+                        jointDict[joint["identity"]][box["identity"]] = 1
             else:
                 for box in bFrame["bounding_boxes"]:
-                    if not box["identity"] in interactions[joint["identity"]]:
-                        if is_bounded(joint["joint"], box["bounding_box"], err):
-                            jointDict[joint["identity"]].add(box["identity"])
-                    
+                    if is_bounded(joint["joint"], box["bounding_box"], err):
+                        if box["identity"] in jointDict[joint["identity"]]:
+                            jointDict[joint["identity"]][box["identity"]] += 1
+                    else:
+                        jointDict[joint["identity"]][box["identity"]] = 1
 
 
-                    if (box["identity"] in jointDict[joint["identity"]]):
-                        if (box["identity"] in jointDict[joint["identity"]]) and (
-                            not is_bounded(joint["joint"], box["bounding_box"])):
-                                jointDict[joint["identity"]].remove(box["identity"])
     return jointDict
-                    
-def printDict(d):
-    for key in d:
-        print(f"{key}:{d[key]}")
 
+def fineTune(joint_list, box_list, d, key, letters):
+    distances = dict()
+    for k in letters:
+        distances[k] = 0
+                    
+    for jFrame, bFrame in zip(joint_list, box_list):
+
+        # Find joint location in frame
+        for j in jFrame["joints"]:
+            if j["identity"] == key:
+                joint = j["joint"]
+                break
+        if j["identity"] != key:
+            continue
+
+        # Calculate distance for interesting boxes
+        for box in bFrame["bounding_boxes"]:
+            if box["identity"] in letters:
+                distances[box["identity"]] += point2box(joint, box["bounding_box"])
+
+    v = list(distances.values())
+    k = list(distances.keys())
+    return k[v.index(min(v))]
 
 def main():
     err = 0.0001
     joint_list, box_list = loadData()
 
     j_idx, b_idx = findIndexes(joint_list, box_list)
+
     if (j_idx != b_idx):
         interpolate(joint_list, box_list, j_idx, b_idx)
     
@@ -86,7 +103,16 @@ def main():
     box_list = sorted(box_list, key=lambda k: k["frame_index"])
 
     jointDict = calcPointDict(joint_list, box_list, j_idx, err)
-    printDict(jointDict)
 
+    indexes = sorted([int(x) for x in list(jointDict)])
+    for key in indexes:
+        key = str(key)
+        letters = keysWithMaxVal(jointDict[key])
+        if len(letters) != 1:
+            letter = fineTune(joint_list, box_list, jointDict[key], key, letters)
+        else:
+            letter = letters[0]
+
+        print(f"{key}:{letter}")
 if __name__ == "__main__":
     main()
