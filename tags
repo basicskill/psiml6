@@ -4,12 +4,41 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+A	homework/4_world_map/testing/4_testing.py	/^A = rgb2gray(scipy.ndimage.imread('map.png'))$/;"	v
+B	homework/4_world_map/testing/4_testing.py	/^B = rgb2gray(scipy.ndimage.imread('patch.png'))$/;"	v
+D	homework/4_world_map/4_first.py	/^def D(m1, m2):$/;"	f
+calcPointDict	homework/3_labeling/3_labeling.py	/^def calcPointDict(joint_list, box_list, indexes, err=0):$/;"	f
 calculateEER	homework/2_wise_person/2_wise_person.py	/^def calculateEER(pos, neg):$/;"	f
 calculateRates	homework/2_wise_person/2_wise_person.py	/^def calculateRates(pos, neg):$/;"	f
+data_analisys	homework/3_labeling/data_analisys.py	/^def data_analisys():$/;"	f
 dict2hist	homework/2_wise_person/2_wise_person.py	/^def dict2hist(dictData):$/;"	f
+findIndexes	homework/3_labeling/3_labeling.py	/^def findIndexes(joint_list, box_list):$/;"	f
+findPatch	homework/4_world_map/4_first.py	/^def findPatch(world, patch):$/;"	f
+findPosition	homework/4_world_map/4_world_map.py	/^def findPosition(world, mat, data, patch):$/;"	f
 image	homework/1_getting_started/1_getting_started.py	/^    image = np.array(image_file)$/;"	v
 image_file	homework/1_getting_started/1_getting_started.py	/^    image_file = Image.open(image_path)$/;"	v
 image_path	homework/1_getting_started/1_getting_started.py	/^    image_path = input()$/;"	v
+interpolate	homework/3_labeling/3_labeling.py	/^def interpolate(j_json, b_json, j_indexes, b_indexes):$/;"	f
+is_bounded	homework/3_labeling/3_labeling.py	/^def is_bounded(point, box, err=0):$/;"	f
+loadData	homework/3_labeling/3_labeling.py	/^def loadData():$/;"	f
 main	homework/2_wise_person/2_wise_person.py	/^def main():$/;"	f
+main	homework/3_labeling/3_labeling.py	/^def main():$/;"	f
+main	homework/4_world_map/4_first.py	/^def main():$/;"	f
+main	homework/4_world_map/4_redo.py	/^def main():$/;"	f
+main	homework/4_world_map/4_world_map.py	/^def main():$/;"	f
 pixel	homework/1_getting_started/1_getting_started.py	/^    pixel = image[0, 0]$/;"	v
+point2box	homework/3_labeling/3_labeling.py	/^def point2box(point, box):$/;"	f
+points	homework/4_world_map/4_first.py	/^def points(x, y, sol):$/;"	f
+points	homework/4_world_map/4_world_map.py	/^def points(x, y, sol):$/;"	f
+preprocess	homework/4_world_map/4_redo.py	/^def preprocess(world):$/;"	f
+preprocess	homework/4_world_map/4_world_map.py	/^def preprocess(world):$/;"	f
+printDict	homework/3_labeling/3_labeling.py	/^def printDict(d):$/;"	f
 readData	homework/2_wise_person/2_wise_person.py	/^def readData(rootFolder):$/;"	f
+rgb2gray	homework/4_world_map/4_first.py	/^def rgb2gray(image):$/;"	f
+rgb2gray	homework/4_world_map/4_redo.py	/^def rgb2gray(image):$/;"	f
+rgb2gray	homework/4_world_map/4_world_map.py	/^def rgb2gray(image):$/;"	f
+rgb2gray	homework/4_world_map/testing/4_testing.py	/^def rgb2gray(image):$/;"	f
+show	homework/4_world_map/4_first.py	/^def show(m):$/;"	f
+show	homework/4_world_map/4_redo.py	/^def show(m):$/;"	f
+start_time	homework/4_world_map/4_first.py	/^    start_time = time.time()$/;"	v
+start_time	homework/4_world_map/4_redo.py	/^    start_time = time.time()$/;"	v
