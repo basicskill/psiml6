@@ -13,7 +13,7 @@ def is_bounded(point, box, err=0):
     return True
 
 def point2box(point, box):
-    """ distance from point to box center """
+    """ distance from point to x, y of box """
     x = box["x"] + box["w"] / 2
     y = box["y"] + box["h"] / 2
     # ne mora sqrt!
@@ -28,7 +28,7 @@ def loadData():
 
     return joint_list, box_list
 
-def findIndexes(joint_list, box_list):
+def sameIndexes(joint_list, box_list):
     j_indexes = []
     b_indexes = []
     for frame in box_list:
@@ -38,13 +38,102 @@ def findIndexes(joint_list, box_list):
     j_indexes = sorted(j_indexes)
     b_indexes = sorted(b_indexes)
 
-    return j_indexes, b_indexes
+    return j_indexes == b_indexes
 
-def interpolate(j_json, b_json, j_indexes, b_indexes):
+def interJointFrame(leftFrame, rightFrame, frame_index):
+
+    result = {"frame_index": frame_index, "joints": []}
+
+    for left in leftFrame["joints"]:
+        for right in rightFrame["joints"]:
+            if left["identity"] == right["identity"]:
+                result["joints"].append(interJoint(left, right, 
+                        leftFrame["frame_index"], rightFrame["frame_index"], 
+                        frame_index))
+
+    return result
+
+def interBoxFrame(leftFrame, rightFrame, frame_index):
+    result = {"frame_index": frame_index, "bounding_boxes": []}
+
+    for left in leftFrame["bounding_boxes"]:
+        for right in rightFrame["bounding_boxes"]:
+            if left["identity"] == right["identity"]:
+                result["bounding_boxes"].append(interBox(left, right, 
+                        leftFrame["frame_index"], rightFrame["frame_index"], 
+                        frame_index))
+
+    return result
+
+def interJoint(left, right, f0, f1, frame):
+    l = left["joint"]
+    r = right["joint"]
+
+    newJoint = {"identity": left["identity"], "joint": {}}
+
+    newJoint["joint"]["x"] = l["x"] + ((r["x"] - l["x"])/(f1 - f0)) * (frame - f0)
+    newJoint["joint"]["y"] = l["y"] + ((r["y"] - l["y"])/(f1 - f0)) * (frame - f0)
+
+    return newJoint
+
+def interBox(left, right, f0, f1, frame):
+    l = left["bounding_box"]
+    r = right["bounding_box"]
+
+    newBox = {"identity": left["identity"], "bounding_box": {}}
+
+    newBox["bounding_box"]["x"] = l["x"] + ((r["x"] - l["x"])/(f1 - f0)) * (frame - f0)
+    newBox["bounding_box"]["y"] = l["y"] + ((r["y"] - l["y"])/(f1 - f0)) * (frame - f0)
+    newBox["bounding_box"]["w"] = max(l["w"], r["w"])
+    newBox["bounding_box"]["h"] = max(l["h"], r["h"])
+
+    return newBox
+
+def interpolate(j_list, b_list):
     """ aproximate missing frames """
-    print("TODO: Nejednaki indeksi!")
+    newJ = []
+    newB = [] 
 
-def calcPointDict(joint_list, box_list, indexes, err=0):
+    l_bound = max(j_list[0]["frame_index"], b_list[0]["frame_index"])
+    r_bound = min(j_list[-1]["frame_index"], b_list[-1]["frame_index"])
+
+    j_idx = set([x["frame_index"] for x in j_list if x["frame_index"] >= l_bound and x["frame_index"] <= r_bound])
+    b_idx = set([x["frame_index"] for x in b_list if x["frame_index"] >= l_bound and x["frame_index"] <= r_bound])
+    overlap = sorted(list(j_idx.union(b_idx)))
+
+    idx = 0
+    while j_list[idx]["frame_index"] < l_bound:
+        idx += 1
+
+    for frame_index in overlap:
+        if j_list[idx]["frame_index"] == frame_index:
+            newJ.append(j_list[idx])
+            idx += 1
+        else:
+            newJ.append(interJointFrame(j_list[idx-1], j_list[idx], frame_index))
+
+    idx = 0
+    while b_list[idx]["frame_index"] < l_bound:
+        idx += 1
+
+    for frame_index in overlap:
+        if b_list[idx]["frame_index"] == frame_index:
+            newB.append(b_list[idx])
+            idx += 1
+        else:
+            newB.append(interBoxFrame(b_list[idx-1], b_list[idx], frame_index))
+
+    # print("== Joints ==")
+    # for i in newJ:
+    #     print(i)
+    # print("==  Boxes ==")
+    # for i in newB:
+    #     print(i)
+    # print("============")
+    return newJ, newB
+
+
+def calcPointDict(joint_list, box_list, err=0):
     jointDict = dict()
     interactions = dict()
      
@@ -60,9 +149,8 @@ def calcPointDict(joint_list, box_list, indexes, err=0):
                     if is_bounded(joint["joint"], box["bounding_box"], err):
                         if box["identity"] in jointDict[joint["identity"]]:
                             jointDict[joint["identity"]][box["identity"]] += 1
-                    else:
-                        jointDict[joint["identity"]][box["identity"]] = 1
-
+                        else:
+                            jointDict[joint["identity"]][box["identity"]] = 1
 
     return jointDict
 
@@ -88,21 +176,22 @@ def fineTune(joint_list, box_list, d, key, letters):
 
     v = list(distances.values())
     k = list(distances.keys())
-    return k[v.index(min(v))]
+    try:
+        return k[v.index(min(v))]
+    except:
+        return None
 
 def main():
-    err = 0.0001
+    err = 0.01
     joint_list, box_list = loadData()
 
-    j_idx, b_idx = findIndexes(joint_list, box_list)
-
-    if (j_idx != b_idx):
-        interpolate(joint_list, box_list, j_idx, b_idx)
-    
     joint_list = sorted(joint_list, key=lambda k: k["frame_index"])
     box_list = sorted(box_list, key=lambda k: k["frame_index"])
 
-    jointDict = calcPointDict(joint_list, box_list, j_idx, err)
+    if (not sameIndexes(joint_list, box_list)):
+        joint_list, box_list = interpolate(joint_list, box_list)
+    
+    jointDict = calcPointDict(joint_list, box_list, err)
 
     indexes = sorted([int(x) for x in list(jointDict)])
     for key in indexes:
@@ -112,6 +201,15 @@ def main():
             letter = fineTune(joint_list, box_list, jointDict[key], key, letters)
         else:
             letter = letters[0]
+
+        if letter == None:
+            continue
+
+        for key2 in indexes:
+            key2 = str(key2)
+            if letter in jointDict[key2]:
+                jointDict[key2].pop(letter, None)
+
 
         print(f"{key}:{letter}")
 if __name__ == "__main__":

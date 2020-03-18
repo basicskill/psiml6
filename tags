@@ -15,11 +15,13 @@ dict2hist	homework/2_wise_person/2_wise_person.py	/^def dict2hist(dictData):$/;"
 findIndexes	homework/3_labeling/3_labeling.py	/^def findIndexes(joint_list, box_list):$/;"	f
 findPatch	homework/4_world_map/4_first.py	/^def findPatch(world, patch):$/;"	f
 findPosition	homework/4_world_map/4_world_map.py	/^def findPosition(world, mat, data, patch):$/;"	f
+fineTune	homework/3_labeling/3_labeling.py	/^def fineTune(joint_list, box_list, d, key, letters):$/;"	f
 image	homework/1_getting_started/1_getting_started.py	/^    image = np.array(image_file)$/;"	v
 image_file	homework/1_getting_started/1_getting_started.py	/^    image_file = Image.open(image_path)$/;"	v
 image_path	homework/1_getting_started/1_getting_started.py	/^    image_path = input()$/;"	v
 interpolate	homework/3_labeling/3_labeling.py	/^def interpolate(j_json, b_json, j_indexes, b_indexes):$/;"	f
 is_bounded	homework/3_labeling/3_labeling.py	/^def is_bounded(point, box, err=0):$/;"	f
+keysWithMaxVal	homework/3_labeling/3_labeling.py	/^def keysWithMaxVal(d):$/;"	f
 loadData	homework/3_labeling/3_labeling.py	/^def loadData():$/;"	f
 main	homework/2_wise_person/2_wise_person.py	/^def main():$/;"	f
 main	homework/3_labeling/3_labeling.py	/^def main():$/;"	f
@@ -32,7 +34,6 @@ points	homework/4_world_map/4_first.py	/^def points(x, y, sol):$/;"	f
 points	homework/4_world_map/4_world_map.py	/^def points(x, y, sol):$/;"	f
 preprocess	homework/4_world_map/4_redo.py	/^def preprocess(world):$/;"	f
 preprocess	homework/4_world_map/4_world_map.py	/^def preprocess(world):$/;"	f
-printDict	homework/3_labeling/3_labeling.py	/^def printDict(d):$/;"	f
 readData	homework/2_wise_person/2_wise_person.py	/^def readData(rootFolder):$/;"	f
 rgb2gray	homework/4_world_map/4_first.py	/^def rgb2gray(image):$/;"	f
 rgb2gray	homework/4_world_map/4_redo.py	/^def rgb2gray(image):$/;"	f

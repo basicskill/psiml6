@@ -35,3 +35,19 @@ def data_analisys():
 
 if __name__ == "__main__":
     data_analisys()
+    # TEMP
+    # set starting positions
+    # if int(j_list[0]["frame_index"]) > int(b_list[0]["frame_index"]):
+    #     l_bound = int(j_list[0]["frame_index"])
+    #     # Pazi iskakanje iz granica liste!!!
+    #     while int(b_list[idxB+1]["frame_index"]) < l_bound:
+    #         idxB += 1
+    #         if int(b_list[idxB+1]["frame_index"]) == l_bound:
+    #             break
+    # elif int(j_list[0]["frame_index"]) < int(b_list[0]["frame_index"]):
+    #     l_bound = int(b_list[0]["frame_index"])
+    #     # Pazi iskakanje iz granica liste!!!
+    #     while int(j_list[idxJ+1]["frame_index"]) < l_bound:
+    #         idxJ += 1
+    #         if int(j_list[idxJ+1]["frame_index"]) == l_bound:
+    #             break
