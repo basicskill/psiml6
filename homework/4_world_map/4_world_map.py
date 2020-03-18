@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 from scipy.ndimage import sobel, gaussian_filter
 
-import time
+# import time
 
 def points(x, y, sol):
     d = np.sqrt((x - int(sol[0]))**2 + (y - int(sol[1]))**2)
@@ -104,7 +104,7 @@ def main():
         patchPaths[i] = input().strip()
     
 
-    answers = [x.strip().split() for x in open("public/outputs/6.txt").readlines()]
+    # answers = [x.strip().split() for x in open("public/outputs/7.txt").readlines()]
     poeni = 0
 
     imageFile = Image.open(mapPath)
@@ -113,8 +113,8 @@ def main():
 
     mat, data = preprocess(worldMap)
 
-    for path, solution in zip(patchPaths, answers):
-    # for path in patchPaths:
+    # for path, solution in zip(patchPaths, answers):
+    for path in patchPaths:
 
         imageFile = Image.open(path)
         patch = rgb2gray(np.array(imageFile))
@@ -122,13 +122,13 @@ def main():
 
         y, x = findPosition(worldMap, mat, data, patch)
 
-        # print(f"{x},{y}")
-        poeni += points(x, y, solution)
+        print(f"{x},{y}")
+        # poeni += points(x, y, solution)
 
-    print(f"Points: {round(poeni/N * 40, 2)}")
+    # print(f"Points: {round(poeni/N * 40, 2)}")
 
 
 if __name__ == "__main__":
-    start_time = time.time()
+    # start_time = time.time()
     main()
-    print(f"--- {round(time.time() - start_time, 2)} seconds ---")
+    # print(f"--- {round(time.time() - start_time, 2)} seconds ---")

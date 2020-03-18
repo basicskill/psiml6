@@ -84,8 +84,8 @@ def interBox(left, right, f0, f1, frame):
 
     newBox["bounding_box"]["x"] = l["x"] + ((r["x"] - l["x"])/(f1 - f0)) * (frame - f0)
     newBox["bounding_box"]["y"] = l["y"] + ((r["y"] - l["y"])/(f1 - f0)) * (frame - f0)
-    newBox["bounding_box"]["w"] = max(l["w"], r["w"])
-    newBox["bounding_box"]["h"] = max(l["h"], r["h"])
+    newBox["bounding_box"]["w"] = max(l["w"], r["w"]) + 0.005
+    newBox["bounding_box"]["h"] = max(l["h"], r["h"]) + 0.005
 
     return newBox
 
