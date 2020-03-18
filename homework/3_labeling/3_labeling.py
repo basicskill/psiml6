@@ -193,9 +193,29 @@ def main():
     
     jointDict = calcPointDict(joint_list, box_list, err)
 
+
+    surePredictions = []
+
     indexes = sorted([int(x) for x in list(jointDict)])
     for key in indexes:
         key = str(key)
+        letters = keysWithMaxVal(jointDict[key])
+        if len(letters) != 1:
+            continue
+            letter = fineTune(joint_list, box_list, jointDict[key], key, letters)
+
+        letter = letters[0]
+        surePredictions.append((key, letter))
+
+        print(f"{key}:{letter}")
+
+    for key, letter in surePredictions:
+        jointDict.pop(key, None)
+        for key2 in jointDict:
+            if letter in jointDict[key2]:
+                jointDict[key2].pop(letter, None)
+
+    for key in jointDict:
         letters = keysWithMaxVal(jointDict[key])
         if len(letters) != 1:
             letter = fineTune(joint_list, box_list, jointDict[key], key, letters)
@@ -205,12 +225,9 @@ def main():
         if letter == None:
             continue
 
-        for key2 in indexes:
-            key2 = str(key2)
-            if letter in jointDict[key2]:
-                jointDict[key2].pop(letter, None)
-
-
         print(f"{key}:{letter}")
+
+
+
 if __name__ == "__main__":
     main()
