@@ -16,6 +16,7 @@ findPatch	homework/4_world_map/4_first.py	/^def findPatch(world, patch):$/;"	f
 findPosition	homework/4_world_map/4_world_map.py	/^def findPosition(world, mat, data, patch):$/;"	f
 fineTune	homework/3_labeling/3_labeling.py	/^def fineTune(joint_list, box_list, d, key, letters):$/;"	f
 image	homework/1_getting_started/1_getting_started.py	/^    image = np.array(image_file)$/;"	v
+imageFile	homework/4_world_map/public/set/proba.py	/^imageFile = Image.open(path)$/;"	v
 image_file	homework/1_getting_started/1_getting_started.py	/^    image_file = Image.open(image_path)$/;"	v
 image_path	homework/1_getting_started/1_getting_started.py	/^    image_path = input()$/;"	v
 interBox	homework/3_labeling/3_labeling.py	/^def interBox(left, right, f0, f1, frame):$/;"	f
@@ -31,6 +32,8 @@ main	homework/3_labeling/3_labeling.py	/^def main():$/;"	f
 main	homework/4_world_map/4_first.py	/^def main():$/;"	f
 main	homework/4_world_map/4_redo.py	/^def main():$/;"	f
 main	homework/4_world_map/4_world_map.py	/^def main():$/;"	f
+patch	homework/4_world_map/public/set/proba.py	/^patch = np.array(imageFile)$/;"	v
+path	homework/4_world_map/public/set/proba.py	/^path = 'map.png' #"8\/0.png"$/;"	v
 pixel	homework/1_getting_started/1_getting_started.py	/^    pixel = image[0, 0]$/;"	v
 point2box	homework/3_labeling/3_labeling.py	/^def point2box(point, box):$/;"	f
 points	homework/4_world_map/4_first.py	/^def points(x, y, sol):$/;"	f
@@ -41,9 +44,11 @@ readData	homework/2_wise_person/2_wise_person.py	/^def readData(rootFolder):$/;"
 rgb2gray	homework/4_world_map/4_first.py	/^def rgb2gray(image):$/;"	f
 rgb2gray	homework/4_world_map/4_redo.py	/^def rgb2gray(image):$/;"	f
 rgb2gray	homework/4_world_map/4_world_map.py	/^def rgb2gray(image):$/;"	f
+rgb2gray	homework/4_world_map/public/set/proba.py	/^def rgb2gray(image):$/;"	f
 rgb2gray	homework/4_world_map/testing/4_testing.py	/^def rgb2gray(image):$/;"	f
 sameIndexes	homework/3_labeling/3_labeling.py	/^def sameIndexes(joint_list, box_list):$/;"	f
 show	homework/4_world_map/4_first.py	/^def show(m):$/;"	f
 show	homework/4_world_map/4_redo.py	/^def show(m):$/;"	f
+show	homework/4_world_map/public/set/proba.py	/^def show(m):$/;"	f
 start_time	homework/4_world_map/4_first.py	/^    start_time = time.time()$/;"	v
 start_time	homework/4_world_map/4_redo.py	/^    start_time = time.time()$/;"	v

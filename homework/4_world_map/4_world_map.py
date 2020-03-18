@@ -1,8 +1,8 @@
 import numpy as np
 from PIL import Image
-import scipy.ndimage
+from scipy.ndimage import sobel, gaussian_filter
 
-# import time
+import time
 
 def points(x, y, sol):
     d = np.sqrt((x - int(sol[0]))**2 + (y - int(sol[1]))**2)
@@ -47,34 +47,55 @@ def preprocess(world):
     # </Binary>
     return mat, data
 
+def binarySearch(data, target, l, r):
+    while l <= r: 
+        mid = int(l + (r - l)/2)
+        if np.abs(data[mid][0] - target) < 1:
+            return mid
+        elif data[mid][0] < target: 
+            l = mid + 1
+        else: 
+            r = mid - 1
+    return mid
+
 def findPosition(world, mat, data, patch):
     h, w = mat.shape
-    global ph, pw
+    global ph, pw, N
     s = patch.sum()
 
     l = 0
     r = len(data)
 
-    while l <= r: 
-        mid = int(l + (r - l)/2)
-        if np.abs(data[mid][0] - s) < 1e-7:
-            break #return data[mid][2], data[mid][1]
-        elif data[mid][0] < s: 
-            l = mid + 1
-        else: 
-            r = mid - 1
+    mid = binarySearch(data, s, 0, len(data))
 
-    for idx in range(max(mid - 600, 0), min(mid + 600, len(data))):
+    if N < 2000:
+        offset = 600
+    else:
+        offset = int(1.5*1e8/(N*pw*ph))
+    
+    y_m = data[mid][2]
+    x_m = data[mid][1]
+    min_eps  = np.abs(world[y_m:y_m+ph, x_m:x_m+pw] - patch).sum()
+
+    for idx in range(max(mid - offset, 0), min(mid + offset, len(data))):
         y = data[idx][2]
         x = data[idx][1]
-        if np.abs(world[y:y+ph, x:x+pw] - patch).sum() < 1e3:
-            return y, x
+        eps  = np.abs(world[y:y+ph, x:x+pw] - patch).sum()
+        if eps < min_eps:
+            min_eps = eps
+            y_m = y
+            x_m = x
+        if min_eps < 1e-2:
+            break
 
-    # return data[mid][2], data[mid][1]
-    return 172, 281
+    return y_m, x_m
+
+    # return data[mid0][2], data[mid0][1]
+    # return 172, 281
 
 def main():
     mapPath = input().strip() # 345 x 563
+    global N
     N = int(input())
     global ph, pw
     ph, pw = [int(x) for x in input().split(" ")]
@@ -83,28 +104,31 @@ def main():
         patchPaths[i] = input().strip()
     
 
-    # answers = [x.strip().split() for x in open("public/outputs/6.txt").readlines()]
+    answers = [x.strip().split() for x in open("public/outputs/6.txt").readlines()]
+    poeni = 0
 
     imageFile = Image.open(mapPath)
     worldMap = rgb2gray(np.array(imageFile))
+    # worldMap = gaussian_filter(worldMap, 0.9) # filter
 
     mat, data = preprocess(worldMap)
 
-    poeni = 0
-    # for path, solution in zip(patchPaths, answers):
-    for path in patchPaths:
-        # print(path)
+    for path, solution in zip(patchPaths, answers):
+    # for path in patchPaths:
+
         imageFile = Image.open(path)
         patch = rgb2gray(np.array(imageFile))
-        y, x = findPosition(worldMap, mat, data, patch)
-        print(f"{x},{y}")
-        # poeni += points(x, y, solution)
-        # print(f"guess: {x}, {y} -- solution: {solution}")
+        # patch = gaussian_filter(patch, 0.5) # filter
 
-    # print(f"Points: {round(poeni/N * 40, 2)}")
+        y, x = findPosition(worldMap, mat, data, patch)
+
+        # print(f"{x},{y}")
+        poeni += points(x, y, solution)
+
+    print(f"Points: {round(poeni/N * 40, 2)}")
 
 
 if __name__ == "__main__":
-    # start_time = time.time()
+    start_time = time.time()
     main()
-    # print(f"--- {round(time.time() - start_time, 2)} seconds ---")
+    print(f"--- {round(time.time() - start_time, 2)} seconds ---")
